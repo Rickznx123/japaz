@@ -1,6 +1,7 @@
 'use client'
 
 import type { Festival } from '@/data/festivals'
+import Image from 'next/image'
 
 type FestivalDetailsProps = {
   festival: Festival | null
@@ -24,7 +25,8 @@ export function FestivalDetails({ festival, onClose }: FestivalDetailsProps) {
             <div className="category" key={category.name}>
               <h3>{category.name}</h3>
               <ul>{category.items.map((item) => (
-                <li key={item.name}>
+                <li key={item.name} className="menu-item-with-image">
+                  {item.image && <Image src={item.image} alt={item.name} width={56} height={56} unoptimized />}
                   <span>{item.name}</span>
                   {item.items && <ul className="category-subitems">{item.items.map((subitem) => <li key={subitem}>{subitem}</li>)}</ul>}
                 </li>
@@ -47,6 +49,7 @@ export function FestivalDetails({ festival, onClose }: FestivalDetailsProps) {
           </div>
         </div>
         <div className="modal-price"><span>valor por pessoa</span><strong>{festival.price}</strong></div>
+        <a className="modal-public-link" href={`/festivais/${festival.id}`}>Ver página completa do festival →</a>
       </section>
     </div>
   )

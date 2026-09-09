@@ -1,7 +1,7 @@
-'use client'
+import { getMediaLibrary } from '@/lib/media'
+import { MediaLibraryClient } from '@/components/MediaLibraryClient'
 
-import { useState } from 'react'
-import { Upload } from 'lucide-react'
-import { createClient } from '@/lib/supabase/browser'
-
-export default function ImagesPage() { const [status, setStatus] = useState(''); async function upload(file: File) { const allowed = ['image/jpeg', 'image/png', 'image/webp']; if (!allowed.includes(file.type)) return setStatus('Formato inválido. Use JPG, PNG ou WEBP.'); if (file.size > 5 * 1024 * 1024) return setStatus('A imagem deve ter no máximo 5 MB.'); const supabase = createClient(); if (!supabase) return setStatus('Configure o Supabase para enviar imagens.'); const path = `${Date.now()}-${file.name.replace(/[^a-z0-9.-]/gi, '-')}`; const result = await supabase.storage.from('japaz-media').upload(path, file, { contentType: file.type, upsert: false }); if (result.error) return setStatus('Não foi possível enviar a imagem.'); const { data } = supabase.storage.from('japaz-media').getPublicUrl(path); const mediaResult = await supabase.from('media').insert({ file_name: file.name, storage_path: path, url: data.publicUrl }); if (mediaResult.error) return setStatus('Imagem enviada, mas não foi possível registrar a mídia.'); setStatus('Imagem enviada ✓') } return <div className="admin-narrow"><div className="admin-page-heading compact"><div><p className="admin-eyebrow">BIBLIOTECA</p><h1>Imagens</h1><p>Centralize fotos para festivais, itens e landing page.</p></div></div>{status && <p className="admin-save-message">{status}</p>}<label className="upload-drop"><Upload size={23} /><strong>Selecionar imagem</strong><span>JPG, PNG ou WEBP · até 5 MB</span><input type="file" accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp" onChange={(event) => event.target.files?.[0] && upload(event.target.files[0])} /></label></div> }
+export default async function ImagesPage() {
+	const media = await getMediaLibrary()
+	return <MediaLibraryClient initialMedia={media} />
+}

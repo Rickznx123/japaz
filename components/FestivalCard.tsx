@@ -13,7 +13,7 @@ export function FestivalCard({ festival, index, onOpen }: FestivalCardProps) {
   return (
     <article className={`festival-card festival-card-${index + 1}`} style={{ '--accent': festival.accent } as React.CSSProperties}>
       <div className="card-image-wrap">
-        <Image src={festival.image} alt={festival.imageAlt} className="card-image" width={900} height={700} unoptimized />
+        {festival.image ? <Image src={festival.image} alt={festival.imageAlt} className="card-image" width={900} height={700} unoptimized /> : <div className="card-image card-image-empty" aria-label="Imagem de capa não cadastrada" />}
         <span className="card-index">{festival.eyebrow}</span>
         <span className="card-stamp">J</span>
       </div>

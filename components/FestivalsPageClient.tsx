@@ -13,11 +13,11 @@ import type { PublicSettings } from '@/lib/site-settings'
 export function FestivalsPageClient({ festivals, settings }: { festivals: Festival[]; settings: PublicSettings }) {
   const [selectedFestival, setSelectedFestival] = useState<Festival | null>(null)
   return <main>
-    <Header /><Hero settings={settings.hero} />
+    <Header logoUrl={settings.branding.logoUrl} /><Hero settings={settings.hero} />
     <section className="festival-section" id="festivais">
       <div className="section-intro"><div><p className="kicker"><span /> escolha sua experiência</p><h2>Três formas<br /><em>de celebrar.</em></h2></div><p className="section-note">Uma seleção pensada para cada momento.<br />Feita para ser compartilhada.</p></div>
       <div className="festival-grid">{festivals.map((festival, index) => <FestivalCard key={festival.id} festival={festival} index={index} onOpen={setSelectedFestival} />)}</div>
     </section>
-    <UpdatedPrices settings={settings.updated} /><Footer settings={settings.footer} /><FestivalDetails festival={selectedFestival} onClose={() => setSelectedFestival(null)} />
+    <UpdatedPrices settings={settings.updated} /><Footer settings={{ ...settings.footer, logoUrl: settings.branding.footerLogoUrl || settings.branding.logoUrl }} /><FestivalDetails festival={selectedFestival} onClose={() => setSelectedFestival(null)} />
   </main>
 }

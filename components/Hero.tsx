@@ -1,4 +1,4 @@
-export function Hero({ settings }: { settings?: { title?: string; subtitle?: string; description?: string } }) {
+export function Hero({ settings }: { settings?: { title?: string; subtitle?: string; description?: string; imageUrl?: string | null; secondaryImageUrl?: string | null; decorativeImageUrl?: string | null } }) {
   return (
     <section className="hero" id="top">
       <div className="hero-copy">
@@ -10,8 +10,8 @@ export function Hero({ settings }: { settings?: { title?: string; subtitle?: str
       </div>
       <div className="hero-art" aria-hidden="true">
         <div className="hero-circle" />
-        <div className="hero-image hero-image-back" />
-        <div className="hero-image hero-image-front" />
+        <div className="hero-image hero-image-back" style={settings?.secondaryImageUrl ? { backgroundImage: `url(${settings.secondaryImageUrl})` } : undefined} />
+        <div className="hero-image hero-image-front" style={settings?.imageUrl ? { backgroundImage: `url(${settings.imageUrl})` } : undefined} />
         <span className="hero-vertical">festival week · japaz sushi</span>
       </div>
       <div className="hero-number">01 <span>/</span> 03</div>

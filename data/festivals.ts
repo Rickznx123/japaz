@@ -6,6 +6,7 @@ export type FestivalCategory = {
 export type FestivalItem = {
   name: string
   items?: string[]
+  image?: string
 }
 
 export type FestivalInformation = {
