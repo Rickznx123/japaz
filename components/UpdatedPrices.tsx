@@ -8,7 +8,7 @@ export function UpdatedPrices({ settings }: { settings?: { title?: string; descr
         <p>{settings?.description || 'Este cardápio é digital. Os valores podem ser atualizados sempre que necessário.'}</p>
         {settings?.complement && <p>{settings.complement}</p>}
       </div>
-      <span className="update-code">JZ / 2024</span>
+    
     </section>
   )
 }
