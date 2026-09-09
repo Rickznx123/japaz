@@ -1,0 +1,4 @@
+import Link from 'next/link'
+import { getAdminFestivals } from '@/lib/catalog'
+
+export default async function CategoriesPage() { const festivals = await getAdminFestivals(); return <div className="admin-narrow"><div className="admin-page-heading compact"><div><p className="admin-eyebrow">ESTRUTURA</p><h1>Categorias</h1><p>As categorias são relacionadas a cada festival.</p></div></div><div className="admin-category-list">{festivals.map((festival) => <section className="admin-panel" key={festival.id}><div className="panel-heading"><h2>{festival.name}</h2><Link href={`/admin/festivais/${festival.slug}/itens`} className="admin-text-link">Editar categorias →</Link></div>{festival.festival_categories?.map((category) => <div className="simple-list-row" key={category.id}><span>{category.name}</span><small>{category.festival_items?.length ?? 0} itens</small></div>)}</section>)}</div></div> }
