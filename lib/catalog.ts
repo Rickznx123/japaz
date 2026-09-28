@@ -19,7 +19,7 @@ function mapFestival(row: DbFestival): Festival {
     eyebrow: `${String(row.display_order).padStart(2, '0')} / japaz sushi`,
     name: row.name,
     description: row.description,
-    price: row.price.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }),
+    price: new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(Number(row.price)),
     image: imageFor(null, row.cover_media_id, row.cover_media?.url),
     imageAlt: row.name,
     accent: row.slug === 'prime' ? '#c9a26a' : row.slug === 'salmao' ? '#ef5c4d' : '#e50909',
