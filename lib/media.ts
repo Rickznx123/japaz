@@ -27,6 +27,14 @@ export async function getMediaLibrary() {
   for (const festival of festivals ?? []) addUse(festival.cover_media_id, `${festival.name} → Capa`)
   for (const gallery of galleries ?? []) { const festival = (gallery.festivals as unknown as { name: string } | null); addUse(gallery.media_id, `${festival?.name || 'Festival'} → Galeria`) }
   for (const item of items ?? []) { const category = (item.festival_categories as unknown as { name: string; festivals?: { name: string } | null } | null); addUse(item.media_id, `${category?.festivals?.name || 'Festival'} → ${item.name}`) }
-  for (const setting of settings ?? []) if (setting.value?.media_id) addUse(setting.value.media_id, setting.key.replace('branding.', 'Identidade → '))
+  for (const setting of settings ?? []) {
+    if (setting.value?.media_id) addUse(setting.value.media_id, setting.key.replace('branding.', 'Identidade → '))
+    const landingSlots = setting.key === 'landing.hero'
+      ? [['imageMediaId', 'Imagem principal'], ['secondaryImageMediaId', 'Imagem secundária'], ['decorativeImageMediaId', 'Imagem decorativa']]
+      : setting.key === 'landing.updated' ? [['imageMediaId', 'Imagem do aviso']] : []
+    for (const [field, label] of landingSlots) {
+      if (setting.value?.[field]) addUse(setting.value[field], `Landing → ${label}`)
+    }
+  }
   return (data ?? []).map((item) => ({ ...item, uses: uses.get(item.id) || [] })) as MediaRecord[]
 }

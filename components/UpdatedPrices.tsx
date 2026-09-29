@@ -1,7 +1,9 @@
-export function UpdatedPrices({ settings }: { settings?: { title?: string; description?: string; complement?: string } }) {
+import Image from 'next/image'
+
+export function UpdatedPrices({ settings }: { settings?: { title?: string; description?: string; complement?: string; imageUrl?: string | null } }) {
   return (
     <section className="updated-prices" id="atualizacao">
-      <div className="update-icon" aria-hidden="true">↗</div>
+      <div className="update-icon" aria-hidden="true">{settings?.imageUrl ? <Image src={settings.imageUrl} alt="" width={45} height={45} unoptimized /> : '↗'}</div>
       <div>
         <p className="kicker">informação importante</p>
         <h2>{settings?.title || 'Preços atualizados'}</h2>
