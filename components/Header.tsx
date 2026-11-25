@@ -9,7 +9,7 @@ export function Header({ logoUrl }: { logoUrl?: string | null }) {
   return (
     <header className="site-header">
       <a className="brand" href="#top" aria-label="Japaz Sushi, início">
-        {logoUrl ? <Image className="brand-image" src={logoUrl} alt="Japaz Sushi" width={120} height={31} unoptimized /> : <span className="brand-mark">J</span>}
+        {logoUrl ? <Image className="brand-image" src={logoUrl} alt="Japaz Sushi" width={120} height={31} /> : <span className="brand-mark">J</span>}
         <span className="brand-text"><strong>JAPAZ</strong><small>SUSHI</small></span>
       </a>
       <button className={`menu-toggle ${isOpen ? 'is-open' : ''}`} onClick={() => setIsOpen(!isOpen)} aria-label="Abrir menu" aria-expanded={isOpen}>

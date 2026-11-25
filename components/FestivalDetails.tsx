@@ -26,7 +26,7 @@ export function FestivalDetails({ festival, onClose }: FestivalDetailsProps) {
               <h3>{category.name}</h3>
               <ul>{category.items.map((item) => (
                 <li key={item.name} className="menu-item-with-image">
-                  {item.image && <Image src={item.image} alt={item.name} width={56} height={56} unoptimized />}
+                  {item.image && <Image src={item.image} alt={item.name} width={56} height={56} />}
                   <span>{item.name}</span>
                   {item.items && <ul className="category-subitems">{item.items.map((subitem) => <li key={subitem}>{subitem}</li>)}</ul>}
                 </li>

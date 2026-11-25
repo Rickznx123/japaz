@@ -26,16 +26,33 @@ type MediaUploaderProps = {
   onRemove?: () => Promise<void> | void
 }
 
+// Fotos originais (3–5 MB) estouraram a cota de egress do Supabase: reduz para no máx. 1600px em WebP.
+async function compressImage(file: File): Promise<File> {
+  if (file.type === 'image/x-icon') return file
+  const bitmap = await createImageBitmap(file)
+  const scale = Math.min(1, 1600 / Math.max(bitmap.width, bitmap.height))
+  const canvas = document.createElement('canvas')
+  canvas.width = Math.round(bitmap.width * scale)
+  canvas.height = Math.round(bitmap.height * scale)
+  canvas.getContext('2d')?.drawImage(bitmap, 0, 0, canvas.width, canvas.height)
+  const blob = await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, 'image/webp', 0.8))
+  // Navegadores sem encoder WebP devolvem PNG: nesse caso mantém o original.
+  if (!blob || blob.type !== 'image/webp' || blob.size >= file.size) return file
+  return new File([blob], file.name.replace(/\.[^.]+$/, '') + '.webp', { type: 'image/webp' })
+}
+
 export function MediaUploader({ label, context, mediaType, slug, media, onChange, onRemove }: MediaUploaderProps) {
   const inputRef = useRef<HTMLInputElement>(null)
   const [status, setStatus] = useState('')
   const [busy, setBusy] = useState(false)
-  async function upload(file: File) {
-    if (!['image/jpeg', 'image/png', 'image/webp', 'image/x-icon'].includes(file.type)) return setStatus('Use JPG, PNG, WEBP ou ICO.')
-    if (file.size > 5 * 1024 * 1024) return setStatus('A imagem deve ter no máximo 5 MB.')
+  async function upload(original: File) {
+    if (!['image/jpeg', 'image/png', 'image/webp', 'image/x-icon'].includes(original.type)) return setStatus('Use JPG, PNG, WEBP ou ICO.')
     const supabase = createClient()
     if (!supabase) return setStatus('Configure o Supabase para enviar imagens.')
-    setBusy(true); setStatus('Enviando...')
+    setBusy(true); setStatus('Otimizando...')
+    const file = await compressImage(original).catch(() => original)
+    if (file.size > 5 * 1024 * 1024) { setBusy(false); return setStatus('A imagem deve ter no máximo 5 MB.') }
+    setStatus('Enviando...')
     const safeName = file.name.replace(/[^a-z0-9.-]/gi, '-').toLowerCase()
     const path = `japaz/${context}/${Date.now()}-${safeName}`
     const uploadResult = await supabase.storage.from('japaz-media').upload(path, file, { contentType: file.type, upsert: false })

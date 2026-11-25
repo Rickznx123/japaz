@@ -1,6 +1,9 @@
 const fallbackMainImage = 'https://images.unsplash.com/photo-1579584425555-c3ce17fd4351?auto=format&fit=crop&w=900&q=85'
 const fallbackSecondaryImage = 'https://images.unsplash.com/photo-1569718212165-3a8278d5f624?auto=format&fit=crop&w=800&q=85'
 
+// Imagem de fundo via CSS não passa pelo next/image: usa o mesmo otimizador do Vercel pela URL.
+const optimized = (url: string) => `/_next/image?url=${encodeURIComponent(url)}&w=1200&q=75`
+
 export function Hero({ settings }: { settings?: { title?: string; subtitle?: string; description?: string; button?: string; imageUrl?: string | null; secondaryImageUrl?: string | null; decorativeImageUrl?: string | null } }) {
   return (
     <section className="hero" id="top">
@@ -13,8 +16,8 @@ export function Hero({ settings }: { settings?: { title?: string; subtitle?: str
       </div>
       <div className="hero-art" aria-hidden="true">
         <div className="hero-circle" />
-        <div className="hero-image hero-image-back" style={{ backgroundImage: `linear-gradient(135deg, rgba(229,9,9,.35), transparent 50%), url("${settings?.secondaryImageUrl || fallbackSecondaryImage}")` }} />
-        <div className="hero-image hero-image-front" style={{ backgroundImage: `linear-gradient(0deg, rgba(7,7,7,.2), transparent), url("${settings?.imageUrl || fallbackMainImage}")` }} />
+        <div className="hero-image hero-image-back" style={{ backgroundImage: `linear-gradient(135deg, rgba(229,9,9,.35), transparent 50%), url("${optimized(settings?.secondaryImageUrl || fallbackSecondaryImage)}")` }} />
+        <div className="hero-image hero-image-front" style={{ backgroundImage: `linear-gradient(0deg, rgba(7,7,7,.2), transparent), url("${optimized(settings?.imageUrl || fallbackMainImage)}")` }} />
       </div>
       <div className="hero-number">01 <span>/</span> 03</div>
     </section>
